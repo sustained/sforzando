@@ -13,13 +13,10 @@ import {
   Sampler,
   Draw,
   context
-} from "tone";
+} from "tone"
 
-import HelloWorld from "@/components/HelloWorld.vue";
-import PianoOctave from "@/components/PianoOctave.vue";
-import Piano from "@/components/Piano.vue";
-
-import Instruments from "@/library/instruments";
+import Piano from "@/components/Piano.vue"
+// import Instruments from "@/library/instruments"
 
 export default {
   name: "home",
@@ -45,7 +42,7 @@ export default {
         ["D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3", "C4"]
       ],
       currentNoteIndex: 0
-    };
+    }
   },
 
   components: {
@@ -55,117 +52,79 @@ export default {
   methods: {
     togglePlayback() {
       if (this.playing) {
-        Transport.stop();
+        Transport.stop()
       } else {
-        Transport.start();
+        Transport.start()
       }
 
-      this.playing = !this.playing;
+      this.playing = !this.playing
     }
   },
 
   created() {
-    this.music = this.music.flat(); // Flatten the music... in the non-musical sense. o_O
+    // Flatten the music... in the non-musical sense. o_O
+    this.music = this.music.flat()
 
     const sampleMap = this.samples.flat().reduce((acc, val) => {
-      acc[val] = `${val.replace("#", "s")}.mp3`;
-      return acc;
-    }, {});
+      acc[val] = `${val.replace("#", "s")}.mp3`
+      return acc
+    }, {})
 
     const sampler = new Sampler(
       sampleMap,
       () => {
-        sampler.toMaster();
+        sampler.toMaster()
 
-        Transport.bpm.value = this.tempo;
+        Transport.bpm.value = this.tempo
         Transport.scheduleRepeat(time => {
-          sampler.triggerAttackRelease(this.activeNote, "8n");
+          sampler.triggerAttackRelease(this.activeNote, "8n")
 
           // This is the awful part.
           Draw.schedule(() => {
-            const notes = document.querySelectorAll("li");
+            const notes = document.querySelectorAll("li")
 
             if (notes) {
               for (let i = 0; i < notes.length; i++) {
-                notes[i].classList.remove("active");
+                notes[i].classList.remove("active")
               }
             }
 
             document
               .querySelector(`li.${this.previousNote.replace("#", "s")}`)
-              .classList.add("active");
-          }, time);
+              .classList.add("active")
+          }, time)
 
           if (++this.currentNoteIndex > this.music.length - 1) {
-            this.currentNoteIndex = 0;
+            this.currentNoteIndex = 0
           }
-        }, "8t");
+        }, "8t")
       },
       "/audio/samples/piano/"
-    );
+    )
 
-    sampler.release = 2;
+    sampler.release = 2
 
     Buffer.on("error", error => {
-      console.error(error);
-    });
+      console.error(error)
+    })
   },
 
   computed: {
     previousNote() {
-      let lastNote;
+      let lastNote
 
       if (this.currentNoteIndex === 0) {
-        lastNote = this.music.length - 1;
+        lastNote = this.music.length - 1
       } else {
-        lastNote = Math.max(0, this.currentNoteIndex - 1);
+        lastNote = Math.max(0, this.currentNoteIndex - 1)
       }
 
-      return this.music[lastNote];
+      return this.music[lastNote]
     },
 
     activeNote() {
-      return this.music[this.currentNoteIndex];
+      return this.music[this.currentNoteIndex]
     }
   }
-};
+}
 </script>
-
-<style>
-.Fs.active {
-  background-color: rgb(174, 0, 0);
-}
-.G.active {
-  background-color: rgb(255, 0, 0);
-}
-.Gs.active {
-  background-color: rgb(255, 0, 0);
-}
-.A.active {
-  background-color: rgb(255, 102, 0);
-}
-.As.active {
-  background-color: rgb(255, 239, 0);
-}
-.B.active {
-  background-color: rgb(153, 255, 0);
-}
-.C.active {
-  background-color: rgb(0, 40, 255);
-}
-.Cs.active {
-  background-color: rgb(0, 255, 242);
-}
-.D.active {
-  background-color: rgb(0, 122, 255);
-}
-.Ds.active {
-  background-color: rgb(5, 0, 255);
-}
-.E.active {
-  background-color: rgb(71, 0, 237);
-}
-.F.active {
-  background-color: rgb(99, 0, 178);
-}
-</style>

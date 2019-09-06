@@ -1,11 +1,10 @@
 /**
  * @fileoverview A sample library and quick-loader for tone.js
- *
  * @author N.P. Brosowsky (nbrosowsky@gmail.com)
- * https://github.com/nbrosowsky/tonejs-instruments
+ * @link https://github.com/nbrosowsky/tonejs-instruments
  */
 
-import { Sampler } from "tone";
+import { Sampler } from "tone"
 
 /* eslint-disable */
 export default {
@@ -37,95 +36,95 @@ export default {
   onload: null,
 
   setExt(newExt) {
-    let i;
+    let i
     for (i = 0; i <= this.list.length - 1; i++) {
       for (const property in this[this.list[i]]) {
-        this[this.list[i]][property] = this[this.list[i]][property].replace(this.ext, newExt);
+        this[this.list[i]][property] = this[this.list[i]][property].replace(this.ext, newExt)
       }
     }
-    this.ext = newExt;
-    return console.log(`sample extensions set to ${this.ext}`);
+    this.ext = newExt
+    return console.log(`sample extensions set to ${this.ext}`)
   },
 
   load(arg) {
-    let t;
-    let rt;
-    let i;
-    arg ? (t = arg) : (t = {});
-    t.instruments = t.instruments || this.list;
-    t.baseUrl = t.baseUrl || this.baseUrl;
-    t.onload = t.onload || this.onload;
+    let t
+    let rt
+    let i
+    arg ? (t = arg) : (t = {})
+    t.instruments = t.instruments || this.list
+    t.baseUrl = t.baseUrl || this.baseUrl
+    t.onload = t.onload || this.onload
 
     // update extensions if arg given
     if (t.ext) {
       if (t.ext != this.ext) {
-        this.setExt(t.ext);
+        this.setExt(t.ext)
       }
-      t.ext = this.ext;
+      t.ext = this.ext
     }
 
-    rt = {};
+    rt = {}
 
     // if an array of instruments is passed...
     if (Array.isArray(t.instruments)) {
       for (i = 0; i <= t.instruments.length - 1; i++) {
-        var newT = this[t.instruments[i]];
+        var newT = this[t.instruments[i]]
         // Minimize the number of samples to load
         if (this.minify === true || t.minify === true) {
-          var minBy = 1;
+          var minBy = 1
           if (Object.keys(newT).length >= 17) {
-            minBy = 2;
+            minBy = 2
           }
           if (Object.keys(newT).length >= 33) {
-            minBy = 4;
+            minBy = 4
           }
           if (Object.keys(newT).length >= 49) {
-            minBy = 6;
+            minBy = 6
           }
 
-          var filtered = Object.keys(newT).filter((_, i) => i % minBy != 0);
+          var filtered = Object.keys(newT).filter((_, i) => i % minBy != 0)
           filtered.forEach(f => {
-            delete newT[f];
-          });
+            delete newT[f]
+          })
         }
 
         rt[t.instruments[i]] = new Sampler(newT, {
           baseUrl: `${t.baseUrl + t.instruments[i]}/`,
           onload: t.onload
-        });
+        })
       }
 
-      return rt;
+      return rt
 
       // if a single instrument name is passed...
     }
-    newT = this[t.instruments];
+    newT = this[t.instruments]
 
     // Minimize the number of samples to load
     if (this.minify === true || t.minify === true) {
-      minBy = 1;
+      minBy = 1
       if (Object.keys(newT).length >= 17) {
-        minBy = 2;
+        minBy = 2
       }
       if (Object.keys(newT).length >= 33) {
-        minBy = 4;
+        minBy = 4
       }
       if (Object.keys(newT).length >= 49) {
-        minBy = 6;
+        minBy = 6
       }
 
-      filtered = Object.keys(newT).filter((_, i) => i % minBy != 0);
+      filtered = Object.keys(newT).filter((_, i) => i % minBy != 0)
       filtered.forEach(f => {
-        delete newT[f];
-      });
+        delete newT[f]
+      })
     }
 
     const s = new Sampler(newT, {
       baseUrl: `${t.baseUrl + t.instruments}/`,
       onload: t.onload
-    });
+    })
 
-    return s;
+    return s
   },
 
   "bass-electric": {
@@ -630,4 +629,4 @@ export default {
     C5: "C5.[mp3|ogg]",
     C6: "C6.[mp3|ogg]"
   }
-};
+}

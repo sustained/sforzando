@@ -14,7 +14,7 @@ export default {
 
   methods: {
     playNote(note) {
-      console.log(note);
+      console.log(note)
     }
   },
 
@@ -28,12 +28,12 @@ export default {
       },
 
       noteOffsets: ["C", "D", "E", "F", "G", "A", "B"]
-    };
+    }
   },
 
   computed: {
     numOctaves() {
-      return this.octave.end - this.octave.start;
+      return this.octave.end - this.octave.start
     },
 
     style() {
@@ -41,17 +41,17 @@ export default {
         "--keys": this.numOctaves * 7 - 4,
         "--octaves": this.numOctaves,
         "--key-width": "105px"
-      };
+      }
     },
 
     keys() {
-      const keys = [];
-      const whiteKeys = ["A", "B", "C", "D", "E", "F", "G"];
-      const blackKeys = ["A#", null, "C#", "D#", null, "F#", "G#"];
+      const keys = []
+      const whiteKeys = ["A", "B", "C", "D", "E", "F", "G"]
+      const blackKeys = ["A#", null, "C#", "D#", null, "F#", "G#"]
 
       for (let i = 0; i < this.numOctaves * 7; i++) {
-        const octave = Math.floor((i + 5) / 7) + this.octave.start;
-        const keyName = whiteKeys[i % 7];
+        const octave = Math.floor((i + 5) / 7) + this.octave.start
+        const keyName = whiteKeys[i % 7]
 
         const key = {
           name: `${keyName}${octave}`,
@@ -59,16 +59,16 @@ export default {
           style: {
             "grid-column": `${i === 0 ? 1 : 4 + (i - 1) * 3} / span 3`
           }
-        };
+        }
 
-        keys.push(key);
+        keys.push(key)
       }
 
-      keys.splice(keys.length - 4, 4);
+      keys.splice(keys.length - 4, 4)
 
       for (let i = 0; i < this.numOctaves * 7; i++) {
-        const octave = Math.floor((i + 5) / 7) + this.octave.start;
-        const keyName = blackKeys[i % 7];
+        const octave = Math.floor((i + 5) / 7) + this.octave.start
+        const keyName = blackKeys[i % 7]
 
         if (keyName) {
           const key = {
@@ -80,18 +80,18 @@ export default {
             style: {
               "grid-column": `${i === 0 ? 3 : 6 + (i - 1) * 3} / span 2`
             }
-          };
+          }
 
-          keys.push(key);
+          keys.push(key)
         }
       }
 
-      keys.splice(keys.length - 4, 4);
+      keys.splice(keys.length - 4, 4)
 
-      return keys;
+      return keys
     }
   }
-};
+}
 </script>
 
 <style scpoped>
@@ -154,5 +154,42 @@ li.black span {
 
 li {
   transition: background-color 0.2s;
+}
+
+.Fs.active {
+  background-color: rgb(174, 0, 0);
+}
+.G.active {
+  background-color: rgb(255, 0, 0);
+}
+.Gs.active {
+  background-color: rgb(255, 0, 0);
+}
+.A.active {
+  background-color: rgb(255, 102, 0);
+}
+.As.active {
+  background-color: rgb(255, 239, 0);
+}
+.B.active {
+  background-color: rgb(153, 255, 0);
+}
+.C.active {
+  background-color: rgb(0, 40, 255);
+}
+.Cs.active {
+  background-color: rgb(0, 255, 242);
+}
+.D.active {
+  background-color: rgb(0, 122, 255);
+}
+.Ds.active {
+  background-color: rgb(5, 0, 255);
+}
+.E.active {
+  background-color: rgb(71, 0, 237);
+}
+.F.active {
+  background-color: rgb(99, 0, 178);
 }
 </style>

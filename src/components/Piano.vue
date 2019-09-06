@@ -26,8 +26,8 @@ export default {
       octave: {
         start: 0,
         end: 4,
-        startNote: "A",
-        endNote: "C"
+        startNote: "A", // TODO: Implement feature.
+        endNote: "C" // TODO: Implement feature.
       },
 
       noteOffsets: ["C", "D", "E", "F", "G", "A", "B"]

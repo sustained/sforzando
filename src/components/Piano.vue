@@ -72,6 +72,7 @@ export default {
 
         if (keyName) {
           const key = {
+            name: `${keyName}${octave}`,
             class: [
               "black",
               keyName.replace("#", "s"),

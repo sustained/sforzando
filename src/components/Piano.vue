@@ -131,7 +131,7 @@ li {
 li.black span {
   transform: rotate(90deg);
   transform-origin: center 50%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .white {

@@ -9,6 +9,9 @@
 </template>
 
 <script>
+const WHITE_KEYS = ["A", "B", "C", "D", "E", "F", "G"]
+const BLACK_KEYS = ["A#", null, "C#", "D#", null, "F#", "G#"]
+
 export default {
   props: ["active"],
 
@@ -46,12 +49,10 @@ export default {
 
     keys() {
       const keys = []
-      const whiteKeys = ["A", "B", "C", "D", "E", "F", "G"]
-      const blackKeys = ["A#", null, "C#", "D#", null, "F#", "G#"]
 
       for (let i = 0; i < this.numOctaves * 7; i++) {
         const octave = Math.floor((i + 5) / 7) + this.octave.start
-        const keyName = whiteKeys[i % 7]
+        const keyName = WHITE_KEYS[i % 7]
 
         const key = {
           name: `${keyName}${octave}`,
@@ -68,7 +69,7 @@ export default {
 
       for (let i = 0; i < this.numOctaves * 7; i++) {
         const octave = Math.floor((i + 5) / 7) + this.octave.start
-        const keyName = blackKeys[i % 7]
+        const keyName = BLACK_KEYS[i % 7]
 
         if (keyName) {
           const key = {

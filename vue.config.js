@@ -15,4 +15,6 @@ module.exports = IS_DEVILBOX
         disableHostCheck: true
       }
     }
-  : {}
+  : {
+      productionSourceMap: false
+    }

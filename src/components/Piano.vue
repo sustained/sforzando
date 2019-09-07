@@ -132,9 +132,6 @@ export default {
   },
 
   computed: {
-    /*
-      Return the valid
-    */
     offsetStart() {
       // if (this.octaveStart === 0 && this.offsets.noteStart < 5) {
       //   return 5
@@ -147,14 +144,10 @@ export default {
       return clamp(this.offsets.noteEnd, MIN_NOTE, MAX_NOTE)
     },
 
-    octaveSpan() {
-      return 1 + this.numOctaves
-    },
-
     totalWhiteKeys() {
       return Math.min(
         Infinity, // NUM_WHITE_KEYS_TOTAL,
-        this.octaveSpan * NUM_WHITE_KEYS_PER_OCTAVE -
+        this.numOctaves * NUM_WHITE_KEYS_PER_OCTAVE -
           this.offsetStart -
           (NUM_WHITE_KEYS_PER_OCTAVE - (this.offsetEnd + 1))
       )
@@ -163,7 +156,7 @@ export default {
     totalBlackKeys() {
       return Math.min(
         Infinity, // NUM_BLACK_KEYS_TOTAL,
-        this.octaveSpan * NUM_BLACK_KEYS_PER_OCTAVE -
+        this.numOctaves * NUM_BLACK_KEYS_PER_OCTAVE -
           this.offsetStart -
           (NUM_BLACK_KEYS_PER_OCTAVE - (this.offsetEnd + 1))
       )
@@ -175,8 +168,9 @@ export default {
 
     numOctaves() {
       return (
-        Math.min(MAX_OCTAVE, this.offsets.octaveEnd) -
-        Math.max(MIN_OCTAVE, this.offsets.octaveStart)
+        1 +
+        (Math.min(MAX_OCTAVE, this.offsets.octaveEnd) -
+          Math.max(MIN_OCTAVE, this.offsets.octaveStart))
       )
     },
 
@@ -196,9 +190,9 @@ export default {
         const keyName = WHITE_KEYS[i % 7]
 
         // Skip < A0
-        if (octave === 0 && WHITE_KEYS.indexOf(keyName) < 5) {
-          continue
-        }
+        // if (octave === 0 && WHITE_KEYS.indexOf(keyName) < 5) {
+        //   continue
+        // }
 
         const key = {
           name: `${keyName}${octave}`,

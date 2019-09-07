@@ -124,7 +124,10 @@ export default {
 
   methods: {
     calculateOctave(n) {
-      return Math.floor(n / 7) + Math.max(MIN_OCTAVE, this.offsets.octaveStart)
+      return (
+        Math.floor(n / NUM_WHITE_KEYS_PER_OCTAVE) +
+        Math.max(MIN_OCTAVE, this.offsets.octaveStart)
+      )
     }
   },
 

@@ -9,8 +9,101 @@
 </template>
 
 <script>
+import { clamp } from "@/library/math"
+
+const WHITE_KEYS = ["C", "D", "E", "F", "G", "A", "B"]
+const BLACK_KEYS = ["C#", "D#", null, "F#", "G#", "A#", null]
+const NOTE_OFFSETS = ["C", "D", "E", "F", "G", "A", "B"]
+const NUM_WHITE_KEYS_PER_OCTAVE = 7
+const NUM_BLACK_KEYS_PER_OCTAVE = 5
+const NUM_WHITE_KEYS_TOTAL = 52
+const NUM_BLACK_KEYS_TOTAL = 36
+const MIN_OCTAVE = 0
+const MAX_OCTAVE = 8
+const MIN_NOTE = 0
+const MAX_NOTE = 6
+
 export default {
-  props: ["active"],
+  props: {
+    activeNote: {
+      type: String
+    },
+
+    octaveStart: {
+      type: Number,
+      validator(value) {
+        return value >= MIN_OCTAVE && value <= MAX_OCTAVE
+      },
+      default() {
+        return MIN_OCTAVE
+      }
+    },
+
+    octaveEnd: {
+      type: Number,
+      validator(value) {
+        return value >= MIN_OCTAVE && value <= MAX_OCTAVE
+      },
+      default() {
+        return MAX_OCTAVE
+      }
+    },
+
+    noteStart: {
+      type: [Number, String],
+      validator(value) {
+        if (typeof value === "string") {
+          return WHITE_KEYS.includes(value)
+        } else {
+          return value >= MIN_NOTE && value <= MAX_NOTE
+        }
+      },
+      default() {
+        return WHITE_KEYS.indexOf("A")
+      }
+    },
+
+    noteEnd: {
+      type: [Number, String],
+      validator(value) {
+        if (typeof value === "string") {
+          return WHITE_KEYS.includes(value)
+        } else {
+          return value >= MIN_NOTE && value <= MAX_NOTE
+        }
+      },
+      default() {
+        return WHITE_KEYS.indexOf("C")
+      }
+    }
+  },
+
+  created() {
+    if (typeof this.noteStart === "string") {
+      this.offsets.noteStart = WHITE_KEYS.indexOf(this.noteStart)
+    } else {
+      this.offsets.noteStart = this.noteStart
+    }
+
+    if (typeof this.noteEnd === "string") {
+      this.offsets.noteEnd = WHITE_KEYS.indexOf(this.noteEnd)
+    } else {
+      this.offsets.noteEnd = this.noteEnd
+    }
+
+    this.offsets.octaveStart = this.octaveStart
+    this.offsets.octaveEnd = this.octaveEnd
+
+    if (
+      this.offsets.octaveStart > this.offsets.octaveEnd ||
+      (this.offsets.octaveStart === this.offsets.octaveEnd &&
+        this.offsets.noteStart > this.offsets.noteEnd)
+    ) {
+      throw new Error(
+        "The start octave must be lower than or equal to the end octave and the start note must be lower than the end note."
+      )
+    }
+  },
 
   methods: {
     playNote(note) {
@@ -20,73 +113,125 @@ export default {
 
   data() {
     return {
-      octave: {
-        start: 0,
-        end: 4,
-        startNote: "A",
-        endNote: "C"
-      },
+      offsets: {
+        octaveStart: 0,
+        octaveEnd: 3,
+        noteStart: 0,
+        noteEnd: 0
+      }
+    }
+  },
 
-      noteOffsets: ["C", "D", "E", "F", "G", "A", "B"]
+  methods: {
+    calculateOctave(n) {
+      return (
+        Math.floor(n / NUM_WHITE_KEYS_PER_OCTAVE) +
+        Math.max(MIN_OCTAVE, this.offsets.octaveStart)
+      )
     }
   },
 
   computed: {
+    offsetStart() {
+      // if (this.octaveStart === 0 && this.offsets.noteStart < 5) {
+      //   return 5
+      // }
+
+      return clamp(this.offsets.noteStart, MIN_NOTE, MAX_NOTE)
+    },
+
+    offsetEnd() {
+      return clamp(this.offsets.noteEnd, MIN_NOTE, MAX_NOTE)
+    },
+
+    totalWhiteKeys() {
+      return Math.min(
+        Infinity, // NUM_WHITE_KEYS_TOTAL,
+        this.numOctaves * NUM_WHITE_KEYS_PER_OCTAVE -
+          this.offsetStart -
+          (NUM_WHITE_KEYS_PER_OCTAVE - (this.offsetEnd + 1))
+      )
+    },
+
+    totalBlackKeys() {
+      return Math.min(
+        Infinity, // NUM_BLACK_KEYS_TOTAL,
+        this.numOctaves * NUM_BLACK_KEYS_PER_OCTAVE -
+          this.offsetStart -
+          (NUM_BLACK_KEYS_PER_OCTAVE - (this.offsetEnd + 1))
+      )
+    },
+
+    totalKeys() {
+      return this.totalWhiteKeys + this.totalBlackKeys
+    },
+
     numOctaves() {
-      return this.octave.end - this.octave.start
+      return (
+        1 +
+        (Math.min(MAX_OCTAVE, this.offsets.octaveEnd) -
+          Math.max(MIN_OCTAVE, this.offsets.octaveStart))
+      )
     },
 
     style() {
       return {
-        "--keys": this.numOctaves * 7 - 4,
-        "--octaves": this.numOctaves,
-        "--key-width": "105px"
+        "--keys": this.totalWhiteKeys,
+        "--octaves": this.numOctaves
       }
     },
 
     keys() {
       const keys = []
-      const whiteKeys = ["A", "B", "C", "D", "E", "F", "G"]
-      const blackKeys = ["A#", null, "C#", "D#", null, "F#", "G#"]
 
-      for (let i = 0; i < this.numOctaves * 7; i++) {
-        const octave = Math.floor((i + 5) / 7) + this.octave.start
-        const keyName = whiteKeys[i % 7]
+      // White keys.
+      for (let i = this.offsetStart, j = 0; j < this.totalWhiteKeys; i++, j++) {
+        const octave = this.calculateOctave(i)
+        const keyName = WHITE_KEYS[i % 7]
+
+        // Skip < A0
+        // if (octave === 0 && WHITE_KEYS.indexOf(keyName) < 5) {
+        //   continue
+        // }
 
         const key = {
           name: `${keyName}${octave}`,
           class: ["white", keyName, `${keyName}${octave}`],
           style: {
-            "grid-column": `${i === 0 ? 1 : 4 + (i - 1) * 3} / span 3`
+            "grid-column": `${j === 0 ? 1 : 4 + (j - 1) * 3} / span 3`
           }
         }
 
         keys.push(key)
       }
 
-      keys.splice(keys.length - 4, 4)
+      // Black keys.
+      for (let i = this.offsetStart, j = 0; j < this.totalWhiteKeys; i++, j++) {
+        const octave = this.calculateOctave(i)
+        const keyName = BLACK_KEYS[i % 7]
 
-      for (let i = 0; i < this.numOctaves * 7; i++) {
-        const octave = Math.floor((i + 5) / 7) + this.octave.start
-        const keyName = blackKeys[i % 7]
-
-        if (keyName) {
-          const key = {
-            class: [
-              "black",
-              keyName.replace("#", "s"),
-              `${keyName.replace("#", "s")}${octave}`
-            ],
-            style: {
-              "grid-column": `${i === 0 ? 3 : 6 + (i - 1) * 3} / span 2`
-            }
-          }
-
-          keys.push(key)
+        // Skip E♯ (F) or B♯ (C).
+        if (!keyName) {
+          continue
         }
-      }
 
-      keys.splice(keys.length - 4, 4)
+        // Skip > C8.
+        if (octave >= 8) {
+          continue
+        }
+
+        const keyNameClass = keyName.replace("#", "s")
+
+        const key = {
+          name: `${keyName}${octave}`,
+          class: ["black", keyNameClass, `${keyNameClass}${octave}`],
+          style: {
+            "grid-column": `${j === 0 ? 3 : 6 + (j - 1) * 3} / span 2`
+          }
+        }
+
+        keys.push(key)
+      }
 
       return keys
     }
@@ -104,6 +249,7 @@ ul {
 .keyboard {
   width: 100vw;
   height: calc(260px - calc(var(--octaves) * 10px));
+  overflow-x: hidden;
 }
 
 .keyboard ul {
@@ -116,7 +262,6 @@ ul {
 }
 
 li {
-  /* width: var(--key-width); */
   text-align: center;
   background-color: white;
   border: 1px solid black;
@@ -130,18 +275,16 @@ li {
 li.black span {
   transform: rotate(90deg);
   transform-origin: center 50%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .white {
   grid-row: 1 / span 3;
-  /* grid-column: auto / span 3; */
   z-index: 2;
 }
 
 .black {
   grid-row: 1 / span 2;
-  /* grid-column: auto / span 2; */
   background-color: black;
   color: white;
   z-index: 3;

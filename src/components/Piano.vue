@@ -11,8 +11,8 @@
 <script>
 import { clamp } from "@/library/math"
 
-const WHITE_KEYS = ["C", "D", "E", "F", "G", "A", "B"] // ["A", "B", "C", "D", "E", "F", "G"]
-const BLACK_KEYS = ["C#", "D#", null, "F#", "G#", "A#", null] // ["A#", null, "C#", "D#", null, "F#", "G#"]
+const WHITE_KEYS = ["C", "D", "E", "F", "G", "A", "B"]
+const BLACK_KEYS = ["C#", "D#", null, "F#", "G#", "A#", null]
 const NOTE_OFFSETS = ["C", "D", "E", "F", "G", "A", "B"]
 const NUM_WHITE_KEYS_PER_OCTAVE = 7
 const NUM_BLACK_KEYS_PER_OCTAVE = 5

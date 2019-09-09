@@ -1,6 +1,6 @@
 <template>
   <div class="home" @click="togglePlayback">
-    <piano octave-start="1" octave-end="7" />
+    <piano :octave-start="1" :octave-end="7" />
 
     <!-- <p>{{ pianoState }}</p> -->
   </div>

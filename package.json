@@ -9,6 +9,8 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@tonaljs/note": "^3.2.2",
+    "@tonaljs/tonal": "^3.2.2",
     "core-js": "^2.6.5",
     "eslint-plugin-prettier": "^3.1.0",
     "express": "^4.17.1",

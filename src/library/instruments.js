@@ -1,5 +1,6 @@
 import { note, transpose } from "@tonaljs/tonal"
 import { enharmonic } from "@tonaljs/note"
+import { createRange } from "./music"
 import { Sampler } from "tone"
 
 const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -20,7 +21,7 @@ export const SAMPLE_RANGES = {
   harmonium: ["A2", "G#4"],
   harp: ["A2", "G5"],
   organ: ["A1", "F#5"],
-  piano: ["A0", "G#6"], // TODO: Find alternate samples with full piano range.
+  piano: ["A0", "C7"], // TODO: Find alternate samples with full piano range.
   saxophone: ["A3", "G#4"],
   trombone: ["A#0", "G#2"],
   trumpet: ["A2", "G3"],
@@ -43,18 +44,10 @@ export default class Instruments {
 
   generateSampleMaps() {
     for (const [instrument, [from, to]] of Object.entries(SAMPLE_RANGES)) {
-      let sampleMap = {}
-
-      let fromNote = note(from)
-      let toNote = note(to)
-      let numNotes = Math.abs(toNote.height - fromNote.height)
-
-      for (let i = 0, currNote = fromNote; i < numNotes; i++) {
-        sampleMap[currNote.name] = `${currNote.name.replace("#", "s")}.mp3`
-        currNote = note(enharmonic(transpose(currNote, "m2")))
-      }
-
-      this.sampleMaps[instrument] = sampleMap
+      this.sampleMaps[instrument] = createRange(from, to).reduce((map, note) => {
+        map[note.name] = note.name.replace("#", "s") + ".mp3"
+        return map
+      }, {})
     }
 
     return this.sampleMaps

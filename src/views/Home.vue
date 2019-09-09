@@ -5,18 +5,10 @@
 </template>
 
 <script>
-import {
-  Buffer,
-  Sequence,
-  Transport,
-  Event,
-  Sampler,
-  Draw,
-  context
-} from "tone"
+import { Buffer, Sequence, Transport, Event, Draw, context } from "tone"
 
 import Piano from "@/components/Piano.vue"
-// import Instruments from "@/library/instruments"
+import Instruments from "@/library/instruments"
 
 export default {
   name: "home",
@@ -35,12 +27,6 @@ export default {
       ],
       tempo: 60, // BPM
       playing: false,
-      samples: [
-        ["A0", "A#0", "B0", "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1"],
-        ["G1", "G#1", "A1", "A#1", "B1", "C2", "C#2", "D2", "D#2", "E2"],
-        ["F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3", "C#3", "D3"],
-        ["D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3", "C4"]
-      ],
       currentNoteIndex: 0
     }
   },
@@ -65,44 +51,36 @@ export default {
     // Flatten the music... in the non-musical sense. o_O
     this.music = this.music.flat()
 
-    const sampleMap = this.samples.flat().reduce((acc, val) => {
-      acc[val] = `${val.replace("#", "s")}.mp3`
-      return acc
-    }, {})
+    const instruments = new Instruments()
 
-    const sampler = new Sampler(
-      sampleMap,
-      () => {
-        sampler.toMaster()
+    instruments.createSampler("piano", piano => {
+      piano.release = 2
+      piano.toMaster()
 
-        Transport.bpm.value = this.tempo
-        Transport.scheduleRepeat(time => {
-          sampler.triggerAttackRelease(this.activeNote, "8n")
+      Transport.bpm.value = this.tempo
+      Transport.scheduleRepeat(time => {
+        piano.triggerAttackRelease(this.activeNote, "8n")
 
-          // This is the awful part.
-          Draw.schedule(() => {
-            const notes = document.querySelectorAll("li")
+        // This is the awful part.
+        Draw.schedule(() => {
+          const notes = document.querySelectorAll("li")
 
-            if (notes) {
-              for (let i = 0; i < notes.length; i++) {
-                notes[i].classList.remove("active")
-              }
+          if (notes) {
+            for (let i = 0; i < notes.length; i++) {
+              notes[i].classList.remove("active")
             }
-
-            document
-              .querySelector(`li.${this.previousNote.replace("#", "s")}`)
-              .classList.add("active")
-          }, time)
-
-          if (++this.currentNoteIndex > this.music.length - 1) {
-            this.currentNoteIndex = 0
           }
-        }, "8t")
-      },
-      "/audio/samples/piano/"
-    )
 
-    sampler.release = 2
+          document
+            .querySelector(`li.${this.previousNote.replace("#", "s")}`)
+            .classList.add("active")
+        }, time)
+
+        if (++this.currentNoteIndex > this.music.length - 1) {
+          this.currentNoteIndex = 0
+        }
+      }, "8t")
+    })
 
     Buffer.on("error", error => {
       console.error(error)

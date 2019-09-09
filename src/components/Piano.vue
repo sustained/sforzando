@@ -1,8 +1,13 @@
 <template>
   <div class="keyboard" :style="style">
     <ul>
-      <li v-for="(key, index) in keys" :key="index" :style="key.style" :class="key.class">
-        <span @click="playNote(key)">{{ key.name }}</span>
+      <li
+        v-for="(key, index) in keys"
+        :key="index"
+        :style="key.style"
+        :class="[...key.class, {active: noteActive(key.name)}]"
+      >
+        <span>{{ key.name }}</span>
       </li>
     </ul>
   </div>
@@ -10,6 +15,7 @@
 
 <script>
 import { clamp } from "@/library/math"
+import pianoState from "@/library/piano-state"
 
 const WHITE_KEYS = ["C", "D", "E", "F", "G", "A", "B"]
 const BLACK_KEYS = ["C#", "D#", null, "F#", "G#", "A#", null]
@@ -123,6 +129,10 @@ export default {
   },
 
   methods: {
+    noteActive(note) {
+      return pianoState[note] === true
+    },
+
     calculateOctave(n) {
       return (
         Math.floor(n / NUM_WHITE_KEYS_PER_OCTAVE) +
@@ -132,6 +142,10 @@ export default {
   },
 
   computed: {
+    pianoState() {
+      return pianoState
+    },
+
     offsetStart() {
       // if (this.octaveStart === 0 && this.offsets.noteStart < 5) {
       //   return 5

@@ -1,14 +1,17 @@
 <template>
   <div class="home" @click="togglePlayback">
     <piano :active="activeNote" />
+
+    <!-- <p>{{ pianoState }}</p> -->
   </div>
 </template>
 
 <script>
-import { Buffer, Sequence, Transport, Event, Draw, context } from "tone"
-
+import Tone, { Buffer, Sequence, Transport, Event, Draw, context } from "tone"
+import { Midi } from "@tonejs/midi"
 import Piano from "@/components/Piano.vue"
 import Instruments from "@/library/instruments"
+import pianoState, { reset } from "@/library/piano-state"
 
 export default {
   name: "home",
@@ -38,7 +41,7 @@ export default {
   methods: {
     togglePlayback() {
       if (this.playing) {
-        Transport.stop()
+        Transport.pause()
       } else {
         Transport.start()
       }
@@ -57,7 +60,9 @@ export default {
       piano.release = 2
       piano.toMaster()
 
+      /*
       Transport.bpm.value = this.tempo
+      Transport.stop()
       Transport.scheduleRepeat(time => {
         piano.triggerAttackRelease(this.activeNote, "8n")
 
@@ -79,7 +84,38 @@ export default {
         if (++this.currentNoteIndex > this.music.length - 1) {
           this.currentNoteIndex = 0
         }
-      }, "8t")
+      }, "8n")
+      */
+
+      const now = Tone.now() + 0.5
+      Midi.fromUrl("/audio/midi/bach_846.mid")
+        .then(midi => {
+          midi.tracks.forEach(track => {
+            track.notes.forEach(note => {
+              Transport.schedule(() => {
+                piano.triggerAttackRelease(
+                  note.name,
+                  note.duration,
+                  Tone.now(),
+                  note.velocity
+                )
+              }, note.time + now)
+
+              Transport.schedule(time => {
+                Draw.schedule(() => {
+                  pianoState[note.name] = true
+                }, time)
+              }, note.time + now)
+
+              Transport.schedule(time => {
+                Draw.schedule(() => {
+                  pianoState[note.name] = false
+                }, time)
+              }, note.time + note.duration + now)
+            })
+          })
+        })
+        .catch(console.error)
     })
 
     Buffer.on("error", error => {
@@ -88,6 +124,10 @@ export default {
   },
 
   computed: {
+    pianoState() {
+      return pianoState
+    },
+
     previousNote() {
       let lastNote
 

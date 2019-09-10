@@ -31,10 +31,6 @@ const MAX_NOTE = 6
 
 export default {
   props: {
-    activeNote: {
-      type: String
-    },
-
     octaveStart: {
       type: Number,
       validator(value) {

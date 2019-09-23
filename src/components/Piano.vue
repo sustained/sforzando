@@ -249,7 +249,7 @@ export default {
 }
 </script>
 
-<style scpoped>
+<style scoped>
 body,
 ul {
   margin: 0;

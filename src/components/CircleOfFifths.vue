@@ -66,16 +66,6 @@ export default {
   },
 
   methods: {
-    degsToRads(angleDegs) {
-      const { radius } = this
-
-      const angleRads = (-angleDegs * Math.PI) / 180.0
-      const x = radius + radius * Math.cos(angleRads)
-      const y = radius + radius * Math.sin(angleRads)
-
-      return [x, y]
-    },
-
     computeSegmentPath(i) {
       const { radius, diameter, numSegments } = this
 

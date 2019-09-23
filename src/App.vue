@@ -16,6 +16,7 @@
   text-align: center;
   color: #2c3e50;
 }
+
 #nav {
   padding: 30px;
   a {
@@ -25,5 +26,20 @@
       color: #42b983;
     }
   }
+}
+
+html body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:after,
+*:before {
+  box-sizing: inherit;
 }
 </style>

@@ -6,6 +6,8 @@
         :key="index"
         :style="key.style"
         :class="[...key.class, {active: noteActive(key.name)}]"
+        @mouseover="$emit('hover', key.name)"
+        @click="$emit('click', key.name)"
       >
         <span v-show="showNoteNames">{{ key.name }}</span>
       </li>
@@ -287,6 +289,10 @@ li {
   align-items: flex-end;
   padding-bottom: 0.25rem;
   font-weight: bold;
+}
+
+li span {
+  pointer-events: none !important;
 }
 
 li.black span {

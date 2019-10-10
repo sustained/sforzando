@@ -7,7 +7,7 @@
         :style="key.style"
         :class="[...key.class, {active: noteActive(key.name)}]"
       >
-        <span>{{ key.name }}</span>
+        <span v-show="showNoteNames">{{ key.name }}</span>
       </li>
     </ul>
   </div>
@@ -31,6 +31,13 @@ const MAX_NOTE = 6
 
 export default {
   props: {
+    showNoteNames: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
+
     octaveStart: {
       type: Number,
       validator(value) {

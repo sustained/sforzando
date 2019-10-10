@@ -266,9 +266,10 @@ ul {
 }
 
 .keyboard {
-  width: 100vw;
+  width: 100%;
   height: calc(260px - calc(var(--octaves) * 10px));
   overflow-x: hidden;
+  border-bottom: 1px solid black;
 }
 
 .keyboard ul {
@@ -281,6 +282,7 @@ ul {
 }
 
 li {
+  position: relative;
   text-align: center;
   background-color: white;
   border: 1px solid black;
@@ -302,16 +304,60 @@ li.black span {
 }
 
 .white {
+  background: linear-gradient(to bottom, #fff 0%, #e9e9e9 100%);
+  border-top: 1px solid #777;
+  border-left: 1px solid #999;
+  border-bottom: 1px solid #999;
   grid-row: 1 / span 3;
   z-index: 2;
 }
 
+.white.active {
+  border-bottom: 4px solid rgba(0, 0, 0, 0.85);
+}
+
 .black {
   grid-row: 1 / span 2;
-  background-color: black;
+  background: linear-gradient(45deg, #222 0%, #555 100%);
+  border-radius: 0 0 3px 3px;
+  /* border: 1px solid #000; */
+  /* box-shadow: -1px -1px 2px rgba(255, 255, 255, 0.2) inset,
+    0 -5px 2px 3px rgba(0, 0, 0, 0.3) inset, 0 2px 4px rgba(0, 0, 0, 0.4); */
   color: white;
   z-index: 3;
 }
+
+.black:active {
+  box-shadow: -1px -1px 2px rgba(255, 255, 255, 0.2) inset,
+    0 -2px 2px 3px rgba(0, 0, 0, 0.6) inset, 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to right, #444 0%, #222 100%);
+}
+
+/*
+.white.active::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    border-width: 216px 5px 0px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(0,0,0,0.1);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.white.active::after {
+    content: "";
+    width: 0px;
+    height: 0px;
+    border-width: 216px 5px 0px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(0,0,0,0.1);
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+*/
 
 .blank {
   border-width: 0;
@@ -319,43 +365,163 @@ li.black span {
 }
 
 li {
-  transition: background-color 0.2s;
+  transition: all 0.2s ease-out;
 }
 
-.Fs.active {
-  background-color: rgb(174, 0, 0);
+.Fs.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(174, 0, 0) 200%
+  );
 }
-.G.active {
-  background-color: rgb(255, 0, 0);
+.G.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(255, 0, 0) 200%
+  );
 }
-.Gs.active {
-  background-color: rgb(255, 0, 0);
+.Gs.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(255, 0, 0) 200%
+  );
 }
-.A.active {
-  background-color: rgb(255, 102, 0);
+.A.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(255, 102, 0) 200%
+  );
 }
-.As.active {
-  background-color: rgb(255, 239, 0);
+.As.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(255, 239, 0) 200%
+  );
 }
-.B.active {
-  background-color: rgb(153, 255, 0);
+.B.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(153, 255, 0) 200%
+  );
 }
-.C.active {
-  background-color: rgb(0, 40, 255);
+.C.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(0, 40, 255) 200%
+  );
 }
-.Cs.active {
-  background-color: rgb(0, 255, 242);
+.Cs.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(0, 255, 242) 200%
+  );
 }
-.D.active {
-  background-color: rgb(0, 122, 255);
+.D.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(0, 122, 255) 200%
+  );
 }
-.Ds.active {
-  background-color: rgb(5, 0, 255);
+.Ds.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(5, 0, 255) 200%
+  );
 }
-.E.active {
-  background-color: rgb(71, 0, 237);
+.E.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(71, 0, 237) 200%
+  );
 }
-.F.active {
-  background-color: rgb(99, 0, 178);
+.F.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(99, 0, 178) 200%
+  );
 }
 </style>

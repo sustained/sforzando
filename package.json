@@ -1,12 +1,18 @@
 {
   "name": "sforzando",
-  "version": "0.1.0",
-  "private": true,
+  "description": "Music-related Vue components (e.g. a Piano), not really ready at the moment, would recommend not using for now.",
+  "main": "dist/sforzando.common.js",
+  "files": [
+    "dist/*",
+    "src/components/*",
+    "src/library/*"
+  ],
+  "version": "0.0.2",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "node server.js"
+    "build-library": "vue-cli-service build --target lib --name sforzando ./src/libraryBuild.js"
   },
   "dependencies": {
     "register-service-worker": "^1.6.2",

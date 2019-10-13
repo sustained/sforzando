@@ -128,6 +128,9 @@ export default {
     noteActive(note) {
       return pianoState[note] === true
     },
+    setActive(note) {
+      pianoState[note] === true
+    },
 
     calculateOctave(n) {
       return (

@@ -5,10 +5,9 @@
         v-for="(key, index) in keys"
         :key="index"
         :style="key.style"
-        @click="toggleActive(key.name)"
         :class="[...key.class, {active: noteActive(key.name)}]"
-        @mouseover="$emit('hover', key.name)"
-        @click="$emit('click', key.name)"
+        @mouseover="onMouseOver(key, $event)"
+        @click="onClick(key, $event)"
       >
         <span v-show="showNoteNames">{{ key.name }}</span>
       </li>
@@ -34,7 +33,21 @@ const MAX_NOTE = 6
 
 export default {
   props: {
+    emitEvents: {
+      type: Boolean,
+      default() {
+        return true
+      }
+    },
+
     showNoteNames: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
+
+    highlightPressed: {
       type: Boolean,
       default() {
         return false
@@ -135,6 +148,22 @@ export default {
   },
 
   methods: {
+    onClick(key, evt) {
+      if (this.highlightPressed) {
+        this.toggleActive(key.name)
+      }
+
+      if (this.emitEvents) {
+        this.$emit("click", key.name)
+      }
+    },
+
+    onMouseOver(key, evt) {
+      if (this.emitEvents) {
+        this.$emit("hover", key.name)
+      }
+    },
+
     noteActive(note) {
       return pianoState[note] === true
     },

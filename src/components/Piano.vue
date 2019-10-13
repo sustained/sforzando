@@ -5,7 +5,7 @@
         v-for="(key, index) in keys"
         :key="index"
         :style="key.style"
-        @click="toggleActive(key)"
+        @click="toggleActive(key.name)"
         :class="[...key.class, {active: noteActive(key.name)}]"
       >
         <span>{{ key.name }}</span>

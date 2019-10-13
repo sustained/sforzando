@@ -1,6 +1,6 @@
 <template>
   <div class="home" @click="togglePlayback">
-    <piano :octave-start="1" :octave-end="7" />
+    <piano :octave-start="1" :octave-end="7" @click="click" @hover="hover" :emit-events="false" />
   </div>
 </template>
 
@@ -45,6 +45,14 @@ export default {
       }
 
       this.playing = !this.playing
+    },
+
+    click(note) {
+      console.log("click", note)
+    },
+
+    hover(note) {
+      console.log("hover", note)
     }
   },
 

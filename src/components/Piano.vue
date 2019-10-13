@@ -5,6 +5,7 @@
         v-for="(key, index) in keys"
         :key="index"
         :style="key.style"
+        @click="toggleActive()"
         :class="[...key.class, {active: noteActive(key.name)}]"
       >
         <span>{{ key.name }}</span>
@@ -128,8 +129,8 @@ export default {
     noteActive(note) {
       return pianoState[note] === true
     },
-    
-    setActive(note) {
+
+    toggleActive(note) {
       pianoState[note] === true ? pianoState[note] = false : pianoState[note] = true
     },
 

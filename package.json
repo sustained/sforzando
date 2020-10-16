@@ -18,7 +18,7 @@
     "register-service-worker": "^1.6.2",
     "tone": "^13.4.9",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.3",
+    "vue-router": "^3.4.7",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
